@@ -13,7 +13,7 @@ class PolicyProcessor:
         self.logger = logging.getLogger(__name__)
         pd.options.mode.chained_assignment = None
 
-    def parse_request_type(self):
+    def parse_request_type(self, file_path):
         """Description에서 신청번호 파싱"""
         def parse_request_info(rulename, description):
             data_dict = {
@@ -92,36 +92,28 @@ class PolicyProcessor:
             
             return data_dict
 
-        file_name = select_xlsx_files()
-        if not file_name:
-            return
-        
         try:
-            df = pd.read_excel(file_name)
+            df = pd.read_excel(file_path)
             
             for index, row in df.iterrows():
                 result = parse_request_info(row['Rule Name'], row['Description'])
                 for key, value in result.items():
                     df.at[index, key] = value
             
-            df.to_excel(update_version(file_name), index=False)
+            df.to_excel(update_version(file_path), index=False)
             self.logger.info("Successfully parsed request types")
         except Exception as e:
             self.logger.error(f"Error in parse_request_type: {str(e)}")
 
-    def extract_request_id(self):
+    def extract_request_id(self, file_path):
         """정책파일에서 신청번호 추출"""
         try:
-            file_name = select_xlsx_files()
-            if not file_name:
-                return
-            
-            df = pd.read_excel(file_name)
+            df = pd.read_excel(file_path)
             unique_types = df[df['Request Type'] != 'Unknown']['Request Type'].unique()
             selected_types = unique_types[:5]
             selected_data = df[df['Request Type'].isin(selected_types)]
 
-            output_file = f"request_id_{file_name}"
+            output_file = f"request_id_{file_path}"
             with pd.ExcelWriter(output_file) as writer:
                 for request_type, group in selected_data.groupby('Request Type'):
                     group[['Request ID']].drop_duplicates().to_excel(
@@ -131,7 +123,7 @@ class PolicyProcessor:
         except Exception as e:
             self.logger.error(f"Error in extract_request_id: {str(e)}")
 
-    def add_request_info(self):
+    def add_request_info(self, file_path, info_file_path):
         """정책파일에 신청정보 추가"""
         def read_and_process_excel(file):
             df = pd.read_excel(file)
@@ -166,18 +158,8 @@ class PolicyProcessor:
                     rule_df.at[idx, 'REQUESTER_EMAIL'] = row['Request User'] + '@gmail.com'
 
         try:
-            print('select policy file: ')
-            rule_file = select_xlsx_files()
-            if not rule_file:
-                return False
-            
-            print("select info file: ")
-            info_file = select_xlsx_files()
-            if not info_file:
-                return False
-            
-            rule_df = read_and_process_excel(rule_file)
-            info_df = read_and_process_excel(info_file)
+            rule_df = read_and_process_excel(file_path)
+            info_df = read_and_process_excel(info_file_path)
             info_df = info_df.sort_values(by='REQUEST_END_DATE', ascending=False)
             
             auto_extension_id = find_auto_extension_id()
@@ -185,22 +167,17 @@ class PolicyProcessor:
             rule_df.replace({'nan': None}, inplace=True)
             rule_df.loc[rule_df['REQUEST_ID'].isin(auto_extension_id), 'REQUEST_STATUS'] = '99'
             
-            rule_df.to_excel(update_version(rule_file), index=False)
+            rule_df.to_excel(update_version(file_path), index=False)
             self.logger.info("Successfully added request info")
             return True
         except Exception as e:
             self.logger.error(f"Error in add_request_info: {str(e)}")
-            return False 
+            return False
 
-    def process_exceptions(self, vendor='paloalto'):
+    def process_exceptions(self, file_path, vendor='paloalto'):
         """정책 예외처리 (팔로알토/시큐아이)"""
         try:
-            print("select policy file: ")
-            rule_file = select_xlsx_files()
-            if not rule_file:
-                return
-            
-            df = pd.read_excel(rule_file)
+            df = pd.read_excel(file_path)
             current_date = datetime.now()
             three_months_ago = current_date - timedelta(days=90)
 
@@ -283,13 +260,13 @@ class PolicyProcessor:
             df = df.reindex(columns=cols)
             df['미사용여부'] = ''
 
-            df.to_excel(update_version(rule_file, True), index=False, engine='openpyxl')
+            df.to_excel(update_version(file_path, True), index=False, engine='openpyxl')
             self.logger.info(f"Successfully processed {vendor} exceptions")
 
         except Exception as e:
             self.logger.error(f"Error in process_exceptions: {str(e)}") 
 
-    def organize_redundant_file(self):
+    def organize_redundant_file(self, file_path):
         """중복정책 공지/삭제 분류"""
         try:
             expected_columns = ['No', 'Type', 'Seq', 'Rule Name', 'Enable', 'Action', 'Source', 'User', 'Destination', 'Service', 'Application', 'Security Profile', 'Description', 'Request Type', 'Request ID', 'Ruleset ID', 'MIS ID', 'Request User', 'Start Date', 'End Date']
@@ -409,7 +386,7 @@ class PolicyProcessor:
                     target_df.drop(columns=existing_columns, axis=1, inplace=True)
 
             # 파일 저장
-            filename = remove_extension(selected_file)
+            filename = remove_extension(file_path)
             df.to_excel(f'{filename}_정리.xlsx', index=False, engine='openpyxl')
             
             if not notice_df.empty:
@@ -422,7 +399,7 @@ class PolicyProcessor:
         except Exception as e:
             self.logger.error(f"Error in organize_redundant_file: {str(e)}")
 
-    def notice_file_organization(self):
+    def notice_file_organization(self, file_path):
         """정리대상 별 공지파일 분류"""
         def expired_used(df, selected_file):
             """만료된 사용 정책 처리"""
@@ -540,21 +517,11 @@ class PolicyProcessor:
         except Exception as e:
             self.logger.error(f"Error in notice_file_organization: {str(e)}")
 
-    def add_mis_id(self):
+    def add_mis_id(self, file_path, mis_file_path):
         """정책파일에 MIS ID 추가"""
         try:
-            print("select policy file")
-            file = select_xlsx_files()
-            if not file:
-                return
-
-            print("select mis id file")
-            mis_file = select_xlsx_files(".csv")
-            if not mis_file:
-                return
-
-            mis_df = pd.read_csv(mis_file)
-            rule_df = pd.read_excel(file)
+            mis_df = pd.read_csv(mis_file_path)
+            rule_df = pd.read_excel(file_path)
 
             # 중복 제거하고 첫 번째 값만 유지
             mis_df_unique = mis_df.drop_duplicates(subset=['ruleset_id'], keep='first')
@@ -568,7 +535,7 @@ class PolicyProcessor:
                 axis=1
             )
 
-            rule_df.to_excel(update_version(file), index=False, engine='openpyxl')
+            rule_df.to_excel(update_version(file_path), index=False, engine='openpyxl')
             self.logger.info("Successfully added MIS IDs")
 
         except Exception as e:
