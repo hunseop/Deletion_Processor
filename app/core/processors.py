@@ -2,8 +2,8 @@ import pandas as pd
 import logging
 from datetime import datetime, timedelta
 import re
-from config import COLUMNS, COLUMNS_NO_HISTORY, DATE_COLUMNS, TRANSLATED_COLUMNS, EXCEPT_LIST
-from utils import (
+from app.core.config import COLUMNS, COLUMNS_NO_HISTORY, DATE_COLUMNS, TRANSLATED_COLUMNS, EXCEPT_LIST
+from app.core.utils import (
     select_xlsx_files, update_version, save_to_excel, 
     remove_extension, convert_to_date, find_auto_extension_id
 )

@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-container">
+    <header class="app-header">
+        <h1>방화벽 정책 정리</h1>
+    </header>
+
+    <main class="task-list">
+        <!-- Phase 1: 초기 설정 -->
+        <div class="task-card" id="phase1">
+            <div class="task-header">
+                <span class="task-number">1</span>
+                <h2>방화벽 접속 설정</h2>
+                <span class="task-status">진행중</span>
+            </div>
+            <div class="task-content">
+                <div class="form-group">
+                    <select id="vendor" name="vendor" required>
+                        <option value="">벤더 선택</option>
+                        <option value="paloalto">팔로알토</option>
+                        <option value="secui">시큐아이</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="primary_ip" placeholder="Primary IP" required>
+                    <input type="text" id="secondary_ip" placeholder="Secondary IP (선택)">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="username" placeholder="사용자 ID" required>
+                    <input type="password" id="password" placeholder="비밀번호" required>
+                </div>
+                <button onclick="testConnection()" class="primary-button">연결 테스트</button>
+            </div>
+        </div>
+
+        <!-- Phase 2: 데이터 수집 -->
+        <div class="task-card disabled" id="phase2">
+            <div class="task-header">
+                <span class="task-number">2</span>
+                <h2>데이터 수집</h2>
+                <span class="task-status">대기중</span>
+            </div>
+            <div class="task-content">
+                <!-- Task 1: 정책 추출 -->
+                <div class="task-item">
+                    <div class="task-item-header">
+                        <h3>정책 추출</h3>
+                        <div class="task-controls">
+                            <button class="control-button start" onclick="collectData('policy')" data-requirement="policy">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button class="control-button stop" onclick="stopCollection('policy')" disabled>
+                                <i class="fas fa-stop"></i>
+                            </button>
+                            <button class="control-button validate" onclick="validateData('policy')" disabled>
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="control-button download" onclick="downloadData('policy')" disabled>
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="control-button retry" onclick="retryCollection('policy')" disabled>
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="task-progress">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0%</span>
+                    </div>
+                    <div class="task-details">
+                        <div class="status-message"></div>
+                        <div class="data-preview"></div>
+                    </div>
+                </div>
+
+                <!-- Task 2: 사용이력 추출 -->
+                <div class="task-item">
+                    <div class="task-item-header">
+                        <h3>사용이력 추출</h3>
+                        <div class="task-controls">
+                            <button class="control-button start" onclick="collectData('usage')" data-requirement="usage">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button class="control-button stop" onclick="stopCollection('usage')" disabled>
+                                <i class="fas fa-stop"></i>
+                            </button>
+                            <button class="control-button validate" onclick="validateData('usage')" disabled>
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="control-button download" onclick="downloadData('usage')" disabled>
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="control-button retry" onclick="retryCollection('usage')" disabled>
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="task-progress">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0%</span>
+                    </div>
+                    <div class="task-details">
+                        <div class="status-message"></div>
+                        <div class="data-preview"></div>
+                    </div>
+                </div>
+
+                <!-- Task 3: 중복정책 추출 -->
+                <div class="task-item">
+                    <div class="task-item-header">
+                        <h3>중복정책 추출</h3>
+                        <div class="task-controls">
+                            <button class="control-button start" onclick="collectData('duplicate')" data-requirement="duplicate">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button class="control-button stop" onclick="stopCollection('duplicate')" disabled>
+                                <i class="fas fa-stop"></i>
+                            </button>
+                            <button class="control-button validate" onclick="validateData('duplicate')" disabled>
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="control-button download" onclick="downloadData('duplicate')" disabled>
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="control-button retry" onclick="retryCollection('duplicate')" disabled>
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="task-progress">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0%</span>
+                    </div>
+                    <div class="task-details">
+                        <div class="status-message"></div>
+                        <div class="data-preview"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 3: 정보 파싱 -->
+        <div class="task-card" id="phase3">
+            <div class="task-header">
+                <span class="task-number">3</span>
+                <h2>정보 파싱</h2>
+                <span class="task-status">진행중</span>
+            </div>
+            <div class="task-content">
+                <div class="file-upload-section">
+                    <div class="upload-group">
+                        <label>정책 파일</label>
+                        <input type="file" id="policyFile" accept=".xlsx,.csv">
+                        <button onclick="parseFile('policy')" class="action-button">파싱</button>
+                    </div>
+                    <div class="upload-group">
+                        <label>중복정책 파일</label>
+                        <input type="file" id="duplicateFile" accept=".xlsx,.csv">
+                        <button onclick="parseFile('duplicate')" class="action-button">파싱</button>
+                    </div>
+                </div>
+                <div class="parsing-result">
+                    <h3>파싱 결과</h3>
+                    <div class="result-preview">
+                        <!-- 파싱 결과가 여기에 표시됩니다 -->
+                    </div>
+                    <div class="error-list">
+                        <!-- 오류 항목이 여기에 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 4: 데이터 준비 -->
+        <div class="task-card disabled" id="phase4">
+            <div class="task-header">
+                <span class="task-number">4</span>
+                <h2>데이터 준비</h2>
+                <span class="task-status">대기중</span>
+            </div>
+            <div class="task-content">
+                <div class="file-upload-section">
+                    <div class="upload-group">
+                        <label>신청정보 파일</label>
+                        <input type="file" id="requestFile" accept=".xlsx,.csv">
+                        <div class="file-info">* 신청정보 파일을 업로드하세요</div>
+                    </div>
+                    <div class="upload-group">
+                        <label>MIS ID 파일</label>
+                        <input type="file" id="misFile" accept=".xlsx,.csv">
+                        <div class="file-info">* MIS ID 파일을 업로드하세요</div>
+                    </div>
+                </div>
+                <button onclick="validateFiles()" class="primary-button">파일 검증</button>
+            </div>
+        </div>
+
+        <!-- Phase 5: 데이터 통합 -->
+        <div class="task-card disabled" id="phase5">
+            <div class="task-header">
+                <span class="task-number">5</span>
+                <h2>데이터 통합</h2>
+                <span class="task-status">대기중</span>
+            </div>
+            <div class="task-content">
+                <div class="integration-steps">
+                    <div class="step">
+                        <button onclick="integrateData('mis')" class="task-button">MIS ID 정보 추가</button>
+                        <div class="step-status"></div>
+                    </div>
+                    <div class="step">
+                        <button onclick="integrateData('request')" class="task-button">신청정보 통합</button>
+                        <div class="step-status"></div>
+                    </div>
+                    <div class="step">
+                        <button onclick="integrateData('exception')" class="task-button">예외처리</button>
+                        <div class="step-status"></div>
+                    </div>
+                </div>
+                <div class="integration-preview"></div>
+            </div>
+        </div>
+
+        <!-- Phase 6: 결과 생성 -->
+        <div class="task-card disabled" id="phase6">
+            <div class="task-header">
+                <span class="task-number">6</span>
+                <h2>결과 생성</h2>
+                <span class="task-status">대기중</span>
+            </div>
+            <div class="task-content">
+                <div class="result-options">
+                    <div class="option">
+                        <h3>정책 분류</h3>
+                        <button onclick="generateResult('policy')" class="task-button">정책 분류 생성</button>
+                    </div>
+                    <div class="option">
+                        <h3>공지 파일</h3>
+                        <button onclick="generateResult('notice')" class="task-button">공지 파일 생성</button>
+                    </div>
+                </div>
+                <div class="download-section">
+                    <h3>다운로드</h3>
+                    <div class="file-list">
+                        <!-- 생성된 파일 목록이 여기에 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 하단 제어 영역 -->
+    <footer class="control-section">
+        <button id="prevPhase" class="nav-button" disabled>이전</button>
+        <button id="saveProgress" class="save-button">중간 저장</button>
+        <button id="nextPhase" class="nav-button" disabled>다음</button>
+    </footer>
+</div>
+{% endblock %} 
