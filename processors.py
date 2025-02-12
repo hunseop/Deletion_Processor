@@ -147,7 +147,7 @@ class PolicyProcessor:
                 if not matched_row.empty:
                     for col in matched_row.columns:
                         if col in ['REQUEST_START_DATE', 'REQUEST_END_DATE', 'Start Date', 'End Date']:
-                            rule_df.at[idx, col] = pd.to_datetime(matched_row[col].values[0], errors='coerce')
+                            rule_df.at[idx, col] = pd.to_datetime(matched_row[col].values[0], errors='coerce') 
                         else:
                             rule_df.at[idx, col] = matched_row[col].values[0]
                 elif row['Request Type'] != 'nan' and row['Request Type'] != 'Unknown':
@@ -238,7 +238,8 @@ class PolicyProcessor:
             def check_date(row):
                 try:
                     end_date = pd.to_datetime(row['REQUEST_END_DATE'])
-                    return '미만료' if end_date > current_date else '만료'
+                    current_date = datetime.now().date()
+                    return '미만료' if end_date >= current_date else '만료'
                 except:
                     return '만료'
             
@@ -272,12 +273,12 @@ class PolicyProcessor:
             expected_columns = ['No', 'Type', 'Seq', 'Rule Name', 'Enable', 'Action', 'Source', 'User', 'Destination', 'Service', 'Application', 'Security Profile', 'Description', 'Request Type', 'Request ID', 'Ruleset ID', 'MIS ID', 'Request User', 'Start Date', 'End Date']
             expected_columns_2 = ['No', 'Type', 'Vsys', 'Seq', 'Rule Name', 'Enable', 'Action', 'Source', 'User', 'Destination', 'Service', 'Application', 'Security Profile', 'Description', 'Request Type', 'Request ID', 'Ruleset ID', 'MIS ID', 'Request User', 'Start Date', 'End Date']
 
-            print('중복정책 파일을 선택')
-            selected_file = select_xlsx_files()
-            if not selected_file:
-                return
+            # print('신청정보 파일을 선택')
+            # selected_file = select_xlsx_files()
+            # if not selected_file:
+            #     return
 
-            df = pd.read_excel(selected_file)
+            df = pd.read_excel(file_path)
             current_columns = df.columns.tolist()
 
             if current_columns != expected_columns and current_columns != expected_columns_2:
@@ -297,7 +298,7 @@ class PolicyProcessor:
             df['늦은종료일'] = df.groupby('No')['End Date'].transform(
                 lambda x: (x == x.max()) & (~x.duplicated(keep='first'))
             )
-
+            
             # 신청자 검증
             df['신청자검증'] = df.groupby('No')['Request User'].transform(lambda x: x.nunique() == 1)
 
@@ -456,7 +457,7 @@ class PolicyProcessor:
             filtered_df = df[
                 (df['예외'].isna()) &
                 (df['중복여부'].isna()) &
-                (df['신청이력'] != 'Unknown') &
+                (df['신청이력'].isin(['GROUP', 'NORMAL'])) &
                 (df['만료여부'] == '미만료') &
                 (df['미사용여부'] == '미사용')
             ]
