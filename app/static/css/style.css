@@ -6,35 +6,22 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height: 1.6;
-    background: #f5f7fa;
     color: #333;
+    background-color: #f5f5f5;
 }
 
-/* 앱 컨테이너 */
 .app-container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 20px;
 }
 
 /* 헤더 */
 .app-header {
+    margin-bottom: 30px;
     text-align: center;
-    margin-bottom: 2rem;
-}
-
-.app-header h1 {
-    font-size: 1.5rem;
-    color: #2d3748;
-}
-
-/* 태스크 리스트 */
-.task-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
 }
 
 /* 태스크 카드 */
@@ -42,59 +29,54 @@ body {
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    overflow: hidden;
-    transition: all 0.3s ease;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
-.task-card.disabled {
-    opacity: 0.7;
-    pointer-events: none;
-}
-
-.task-card.completed {
-    border-left: 4px solid #48bb78;
-}
-
-/* 태스크 헤더 */
-.task-header {
+/* 태스크 행 */
+.task-row {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    background: #f8fafc;
-    border-bottom: 1px solid #e2e8f0;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
 }
 
-.task-number {
-    width: 24px;
-    height: 24px;
-    background: #4299e1;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.875rem;
-    margin-right: 1rem;
+/* 컨트롤 버튼 */
+.control-button {
+    padding: 8px;
+    margin-left: 8px;
+    border: none;
+    border-radius: 4px;
+    background: #f0f0f0;
+    cursor: pointer;
 }
 
-.task-header h2 {
-    font-size: 1rem;
-    flex: 1;
+.control-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
-.task-status {
-    font-size: 0.875rem;
-    color: #718096;
+.control-button:hover:not(:disabled) {
+    background: #e0e0e0;
 }
 
-/* 태스크 컨텐츠 */
-.task-content {
-    padding: 1rem;
+/* Phase 1 스타일 */
+.connection-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-/* 폼 그룹 */
 .form-group {
     margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #4a5568;
 }
 
 .form-group input,
@@ -103,225 +85,50 @@ body {
     padding: 0.5rem;
     border: 1px solid #e2e8f0;
     border-radius: 4px;
-    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
 }
 
-/* 버튼 스타일 */
-button {
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;
-    cursor: pointer;
     font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.primary-button {
-    background: #4299e1;
-    color: white;
-    width: 100%;
-}
-
-.task-button {
-    background: #edf2f7;
-    color: #2d3748;
-    margin-right: 0.5rem;
-}
-
-button:hover {
-    opacity: 0.9;
-}
-
-button:disabled {
-    background: #e2e8f0;
-    cursor: not-allowed;
-}
-
-/* 데이터 프리뷰 */
-.data-preview {
-    margin-top: 1rem;
-    padding: 1rem;
-    background: #f8fafc;
-    border-radius: 4px;
-    font-size: 0.875rem;
-}
-
-/* 파일 업로드 섹션 */
-.file-upload-section {
-    margin-bottom: 1.5rem;
-}
-
-.upload-group {
-    margin-bottom: 1rem;
-}
-
-.file-info {
-    font-size: 0.75rem;
-    color: #718096;
-    margin-top: 0.25rem;
-}
-
-/* 통합 단계 */
-.integration-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.step {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.step-status {
-    font-size: 0.875rem;
-    color: #718096;
-}
-
-/* 결과 옵션 */
-.result-options {
-    margin-bottom: 1.5rem;
-}
-
-.option {
-    margin-bottom: 1rem;
-}
-
-.option h3 {
-    font-size: 0.875rem;
-    margin-bottom: 0.5rem;
-    color: #4a5568;
-}
-
-/* 다운로드 섹션 */
-.download-section {
-    border-top: 1px solid #e2e8f0;
-    padding-top: 1rem;
-}
-
-.file-list {
-    margin-top: 0.5rem;
-}
-
-.file-item {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-    background: #f8fafc;
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
-}
-
-.file-item .file-name {
-    flex: 1;
-    font-size: 0.875rem;
-}
-
-.file-item .download-button {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-}
-
-/* Task 아이템 스타일 */
-.task-item {
-    background: #f8fafc;
-    border-radius: 6px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-}
-
-.task-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.75rem;
-}
-
-.task-item-header h3 {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #2d3748;
-}
-
-/* 컨트롤 버튼 */
-.task-controls {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.control-button {
-    width: 28px;
-    height: 28px;
-    border-radius: 4px;
-    border: none;
-    background: #fff;
-    color: #4a5568;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     transition: all 0.2s;
 }
 
-.control-button:hover {
-    background: #edf2f7;
-}
-
-.control-button:disabled {
+.btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.control-button.start { color: #48bb78; }
-.control-button.stop { color: #e53e3e; }
-.control-button.validate { color: #4299e1; }
-.control-button.download { color: #805ad5; }
-.control-button.retry { color: #ed8936; }
-
-/* 진행 상태 바 */
-.task-progress {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
+.test-connection {
+    background-color: #4299e1;
+    color: white;
 }
 
-.task-progress .progress-bar {
-    flex: 1;
-    height: 6px;
-    background: #e2e8f0;
-    border-radius: 3px;
-    overflow: hidden;
+.test-connection:hover:not(:disabled) {
+    background-color: #3182ce;
 }
 
-.task-progress .progress {
-    height: 100%;
-    background: #4299e1;
-    transition: width 0.3s ease;
+.save-connection {
+    background-color: #48bb78;
+    color: white;
 }
 
-.task-progress .progress-text {
-    font-size: 0.75rem;
-    color: #718096;
-    min-width: 40px;
-}
-
-/* 태스크 상세 정보 */
-.task-details {
-    background: #fff;
-    border-radius: 4px;
-    padding: 0.75rem;
-    margin-top: 0.75rem;
-}
-
-.status-message {
-    font-size: 0.875rem;
-    color: #718096;
-    margin-bottom: 0.5rem;
-}
-
-.data-preview {
-    font-size: 0.75rem;
-    color: #4a5568;
+.save-connection:hover:not(:disabled) {
+    background-color: #38a169;
 } 

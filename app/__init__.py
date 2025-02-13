@@ -1,14 +1,13 @@
-from flask import Flask
-from config.settings import Config
+from flask import Flask, redirect, url_for
 
-def create_app(config_class=Config):
+def create_app():
     app = Flask(__name__)
-    app.config.from_object(config_class)
     
-    # 블루프린트 등록
-    from app.routes import main, firewall, policy
-    app.register_blueprint(main.bp)
-    app.register_blueprint(firewall.bp)
+    from app.routes import policy
     app.register_blueprint(policy.bp)
+    
+    @app.route('/')
+    def index():
+        return redirect(url_for('policy.index'))
     
     return app 
