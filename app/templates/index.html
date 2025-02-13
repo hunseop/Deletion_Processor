@@ -7,52 +7,43 @@
     </header>
 
     <main class="task-list">
-        <!-- Phase 1: 초기 설정 -->
         <div class="task-card" id="phase1">
             <div class="task-header">
-                <h2>방화벽 접속 설정</h2>
-                <span class="task-status">진행중</span>
+                <h2>방화벽 설정</h2>
+                <span class="task-status">대기중</span>
             </div>
             <div class="task-content">
                 <form id="firewallConnectionForm" class="connection-form">
-                    <div class="form-group">
-                        <label for="vendor">Vendor</label>
-                        <select id="vendor" name="vendor" required>
-                            <option value="">선택하세요</option>
-                            <option value="paloalto">팔로알토</option>
-                            <option value="secui">시큐아이</option>
-                        </select>
+                    <div class="form-row vendor-row">
+                        <div class="form-group">
+                            <select id="vendor" name="vendor" required>
+                                <option value="">벤더 선택</option>
+                                <option value="paloalto">팔로알토</option>
+                                <option value="secui">시큐아이</option>
+                            </select>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="primary_ip">Primary IP</label>
-                        <input type="text" id="primary_ip" name="primary_ip" required 
-                               placeholder="예: 192.168.1.1">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="secondary_ip">Secondary IP (선택)</label>
-                        <input type="text" id="secondary_ip" name="secondary_ip" 
-                               placeholder="예: 192.168.1.2">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="username">계정 ID</label>
-                        <input type="text" id="username" name="username" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password">비밀번호</label>
-                        <input type="password" id="password" name="password" required>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="btn test-connection" onclick="testConnection()">
-                            연결 테스트
-                        </button>
-                        <button type="button" class="btn save-connection" onclick="saveConnection()" disabled>
-                            저장
-                        </button>
+                    <div class="form-row inputs-row">
+                        <div class="form-group">
+                            <input type="text" id="primary_ip" name="primary_ip" required 
+                                   placeholder="Primary IP">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="secondary_ip" name="secondary_ip" 
+                                   placeholder="Secondary IP (선택)">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="username" name="username" required 
+                                   placeholder="계정">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="password" name="password" required 
+                                   placeholder="비밀번호">
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn save-btn" onclick="saveConnection()">저장</button>
+                            <button type="button" class="btn reset-btn" onclick="resetForm()">리셋</button>
+                        </div>
                     </div>
                 </form>
             </div>

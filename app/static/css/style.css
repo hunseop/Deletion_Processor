@@ -29,7 +29,7 @@ body {
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 20px;
+    padding: 15px;
     margin-bottom: 20px;
 }
 
@@ -61,58 +61,71 @@ body {
     background: #e0e0e0;
 }
 
-/* Phase 1 스타일 */
+/* Phase 1 스타일 수정 */
 .connection-form {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
+}
+
+.vendor-row {
+    margin-bottom: 8px;
+}
+
+.vendor-row .form-group {
+    max-width: 200px;
+}
+
+.inputs-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #4a5568;
+    flex: 1;
 }
 
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 0.5rem;
+    padding: 6px;
     border: 1px solid #e2e8f0;
     border-radius: 4px;
-    font-size: 0.875rem;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: #4299e1;
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+    font-size: 13px;
 }
 
 .form-actions {
     display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
+    gap: 4px;
+    margin-left: 8px;
 }
 
 .btn {
-    padding: 0.5rem 1rem;
+    padding: 6px 10px;
+    font-size: 13px;
     border: none;
     border-radius: 4px;
-    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
+    white-space: nowrap;
 }
 
-.btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+/* 태스크 카드 헤더 */
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 12px;
+}
+
+.task-header h2 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.task-status {
+    font-size: 13px;
+    color: #666;
 }
 
 .test-connection {
@@ -129,6 +142,22 @@ body {
     color: white;
 }
 
-.save-connection:hover:not(:disabled) {
-    background-color: #38a169;
+/* 버튼 스타일 */
+.save-btn {
+    background-color: #4299e1;
+    color: white;
+}
+
+.reset-btn {
+    background-color: #e2e8f0;
+    color: #4a5568;
+}
+
+/* 상태 스타일 */
+.task-status.success {
+    color: #48bb78;
+}
+
+.task-status.error {
+    color: #e53e3e;
 } 
