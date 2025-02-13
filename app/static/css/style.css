@@ -120,7 +120,7 @@ body {
 
 .task-controls {
     display: flex;
-    gap: 4px;
+    gap: 8px;
 }
 
 /* 버튼 스타일 */
@@ -152,6 +152,12 @@ body {
     background-color: #4299e1;
     color: white;
     min-width: 60px;
+}
+
+.download-btn {
+    background-color: #48bb78;
+    color: white;
+    min-width: 80px;
 }
 
 /* 상태 표시 스타일 */

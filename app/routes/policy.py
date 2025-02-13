@@ -24,4 +24,14 @@ def collect_firewall_data(data_type):
         result = policy_service.collect_firewall_data(data_type)
         return jsonify(result)
     except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+@bp.route('/download/<filename>')
+def download_file(filename):
+    try:
+        file_path = policy_service.get_download_path(filename)
+        if not file_path.exists():
+            return jsonify({'success': False, 'message': '파일을 찾을 수 없습니다.'})
+        return send_file(file_path, as_attachment=True)
+    except Exception as e:
         return jsonify({'success': False, 'message': str(e)}) 

@@ -114,8 +114,12 @@ const phase2 = {
             const result = await response.json();
             
             if (result.success) {
-                this.setTaskStatus(dataType, '완료', 'success');
+                const timeInfo = `(${result.elapsed_time}초)`;
+                this.setTaskStatus(dataType, `완료 ${timeInfo}`, 'success');
                 button.disabled = true;
+
+                // 다운로드 버튼 추가
+                this.addDownloadButton(taskRow, result.filename);
                 
                 if (this.checkAllCompleted()) {
                     phaseManager.complete(2);
@@ -129,6 +133,22 @@ const phase2 = {
             this.setTaskStatus(dataType, '오류', 'error');
             button.disabled = false;
         }
+    },
+
+    addDownloadButton(taskRow, filename) {
+        const controls = taskRow.querySelector('.task-controls');
+        let downloadBtn = controls.querySelector('.download-btn');
+        
+        if (!downloadBtn) {
+            downloadBtn = document.createElement('button');
+            downloadBtn.className = 'btn download-btn';
+            downloadBtn.textContent = '다운로드';
+            controls.appendChild(downloadBtn);
+        }
+        
+        downloadBtn.onclick = () => {
+            window.location.href = `/policy/download/${filename}`;
+        };
     },
 
     setTaskStatus(dataType, message, type = '') {
