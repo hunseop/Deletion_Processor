@@ -160,4 +160,44 @@ body {
 
 .task-status.error {
     color: #e53e3e;
+}
+
+/* Phase 2 스타일 추가 */
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.task-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.task-row:last-child {
+    border-bottom: none;
+}
+
+.task-label {
+    font-size: 13px;
+    color: #333;
+}
+
+.task-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.run-btn {
+    background-color: #4299e1;
+    color: white;
+    min-width: 60px;
+}
+
+.run-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 } 

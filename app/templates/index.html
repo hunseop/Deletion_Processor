@@ -7,6 +7,7 @@
     </header>
 
     <main class="task-list">
+        <!-- Phase 1: 방화벽 설정 -->
         <div class="task-card" id="phase1">
             <div class="task-header">
                 <h2>방화벽 설정</h2>
@@ -46,6 +47,41 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Phase 2: 데이터 수집 -->
+        <div class="task-card" id="phase2">
+            <div class="task-header">
+                <h2>데이터 수집</h2>
+                <span class="task-status">대기중</span>
+            </div>
+            <div class="task-content">
+                <div class="task-list">
+                    <!-- 정책 추출 -->
+                    <div class="task-row" data-task="policy">
+                        <div class="task-label">방화벽 정책 가져오기</div>
+                        <div class="task-controls">
+                            <button class="btn run-btn" onclick="runTask('policy')">실행</button>
+                        </div>
+                    </div>
+
+                    <!-- 사용이력 추출 -->
+                    <div class="task-row" data-task="usage">
+                        <div class="task-label">방화벽 사용이력 가져오기</div>
+                        <div class="task-controls">
+                            <button class="btn run-btn" onclick="runTask('usage')">실행</button>
+                        </div>
+                    </div>
+
+                    <!-- 중복정책 추출 -->
+                    <div class="task-row" data-task="duplicate">
+                        <div class="task-label">방화벽 중복 정책 분석하기</div>
+                        <div class="task-controls">
+                            <button class="btn run-btn" onclick="runTask('duplicate')">실행</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
