@@ -1,7 +1,7 @@
 {
-  "vendor": "paloalto",
-  "primary_ip": "1.1.11.1",
-  "secondary_ip": "",
+  "vendor": "secui",
+  "primary_ip": "1.1.1.1",
+  "secondary_ip": "1.1.1.2",
   "username": "1",
   "password": "1"
 }

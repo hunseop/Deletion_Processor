@@ -14,23 +14,54 @@ function isValidIP(ip) {
 
 // 폼 검증 함수
 function validateForm() {
-    const primaryIP = document.getElementById('primary_ip').value;
-    const secondaryIP = document.getElementById('secondary_ip').value;
-    
+    const form = document.getElementById('firewallConnectionForm');
+    const vendor = form.vendor.value;
+    const primaryIP = form.primary_ip.value;
+    const secondaryIP = form.secondary_ip.value;
+    const username = form.username.value;
+    const password = form.password.value;
+    const status = document.querySelector('#phase1 .task-status');
+
+    // 벤더 선택 검증
+    if (!vendor) {
+        status.textContent = '벤더를 선택해주세요';
+        status.classList.add('error');
+        return false;
+    }
+
+    // Primary IP 검증
+    if (!primaryIP) {
+        status.textContent = 'Primary IP를 입력해주세요';
+        status.classList.add('error');
+        return false;
+    }
     if (!isValidIP(primaryIP)) {
-        const status = document.querySelector('#phase1 .task-status');
-        status.textContent = 'Primary IP 형식 오류';
+        status.textContent = 'Primary IP 형식이 올바르지 않습니다';
         status.classList.add('error');
         return false;
     }
-    
+
+    // Secondary IP 검증 (입력된 경우에만)
     if (secondaryIP && !isValidIP(secondaryIP)) {
-        const status = document.querySelector('#phase1 .task-status');
-        status.textContent = 'Secondary IP 형식 오류';
+        status.textContent = 'Secondary IP 형식이 올바르지 않습니다';
         status.classList.add('error');
         return false;
     }
-    
+
+    // 계정 검증
+    if (!username) {
+        status.textContent = '계정을 입력해주세요';
+        status.classList.add('error');
+        return false;
+    }
+
+    // 비밀번호 검증
+    if (!password) {
+        status.textContent = '비밀번호를 입력해주세요';
+        status.classList.add('error');
+        return false;
+    }
+
     return true;
 }
 
