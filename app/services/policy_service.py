@@ -4,6 +4,8 @@ import pandas as pd
 from datetime import datetime
 from pathlib import Path
 import os
+import re
+from werkzeug.utils import secure_filename
 
 class PolicyService:
     def __init__(self):
@@ -122,3 +124,73 @@ class PolicyService:
         # 프로젝트 루트 디렉토리 기준으로 경로 반환
         root_dir = Path(os.getcwd())
         return root_dir / self.download_dir / filename 
+
+    def parse_description(self, file_type, file):
+        """Description 파싱 (현재는 파일명만 변경)"""
+        try:
+            start_time = time.time()
+            
+            # 파일 저장
+            filename = secure_filename(file.filename)
+            filepath = self.download_dir / filename
+            file.save(filepath)
+            
+            # 엑셀 파일 읽기
+            df = pd.read_excel(filepath)
+            
+            # 결과 파일 저장 (현재는 파일명만 변경)
+            output_filename = f"parsed_{file_type}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+            output_filepath = self.download_dir / output_filename
+            df.to_excel(output_filepath, index=False)
+            
+            elapsed_time = round(time.time() - start_time, 1)
+            
+            return {
+                'success': True,
+                'message': 'Description 파싱 완료',
+                'filename': output_filename,
+                'elapsed_time': elapsed_time
+            }
+                
+        except Exception as e:
+            return {
+                'success': False,
+                'message': f'파싱 실패: {str(e)}'
+            }
+
+    def extract_request_id(self):
+        """정책 파일에서 신청번호 추출"""
+        try:
+            start_time = time.time()
+            
+            # 파싱된 정책 파일 찾기
+            policy_file = next(self.download_dir.glob('parsed_policy_*.xlsx'), None)
+            
+            if not policy_file:
+                return {
+                    'success': False,
+                    'message': '파싱된 정책 파일을 찾을 수 없습니다.'
+                }
+            
+            # 파일 읽기
+            df = pd.read_excel(policy_file)
+            
+            # 결과 파일 저장 (현재는 파일명만 변경)
+            output_filename = f"request_id_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+            output_filepath = self.download_dir / output_filename
+            df.to_excel(output_filepath, index=False)
+            
+            elapsed_time = round(time.time() - start_time, 1)
+            
+            return {
+                'success': True,
+                'message': '신청번호 추출 완료',
+                'filename': output_filename,
+                'elapsed_time': elapsed_time
+            }
+            
+        except Exception as e:
+            return {
+                'success': False,
+                'message': f'신청번호 추출 실패: {str(e)}'
+            } 

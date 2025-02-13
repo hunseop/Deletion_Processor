@@ -101,7 +101,58 @@
                 <span class="task-status">대기중</span>
             </div>
             <div class="task-content">
-                <!-- Phase 3 내용은 나중에 구현 -->
+                <div class="task-list">
+                    <!-- 정책 파일 파싱 -->
+                    <div class="task-row" data-task="policy-parse">
+                        <div class="task-info">
+                            <div class="task-label">정책 파일 Description 파싱</div>
+                            <div class="task-file-info">
+                                <input type="file" class="file-input" id="policyFile" accept=".xlsx" 
+                                       onchange="handleFileSelect('policy')">
+                                <button class="btn file-btn" onclick="document.getElementById('policyFile').click()">파일 선택</button>
+                                <span class="file-name">선택된 파일 없음</span>
+                            </div>
+                            <div class="task-status"></div>
+                        </div>
+                        <div class="task-controls">
+                            <button class="btn run-btn" onclick="parseDescription('policy')" disabled>파싱</button>
+                        </div>
+                    </div>
+
+                    <!-- 중복정책 파일 파싱 -->
+                    <div class="task-row" data-task="duplicate-parse">
+                        <div class="task-info">
+                            <div class="task-label">중복정책 파일 Description 파싱</div>
+                            <div class="task-file-info">
+                                <input type="file" class="file-input" id="duplicateFile" accept=".xlsx" 
+                                       onchange="handleFileSelect('duplicate')">
+                                <button class="btn file-btn" onclick="document.getElementById('duplicateFile').click()">파일 선택</button>
+                                <span class="file-name">선택된 파일 없음</span>
+                            </div>
+                            <div class="task-status"></div>
+                        </div>
+                        <div class="task-controls">
+                            <button class="btn run-btn" onclick="parseDescription('duplicate')" disabled>파싱</button>
+                        </div>
+                    </div>
+
+                    <!-- 신청번호 추출 -->
+                    <div class="task-row" data-task="request-number">
+                        <div class="task-info">
+                            <div class="task-label">신청번호 추출</div>
+                            <div class="task-file-info">
+                                <input type="file" class="file-input" id="requestFile" accept=".xlsx" 
+                                       onchange="handleFileSelect('request')">
+                                <button class="btn file-btn" onclick="document.getElementById('requestFile').click()">파일 선택</button>
+                                <span class="file-name">선택된 파일 없음</span>
+                            </div>
+                            <div class="task-status"></div>
+                        </div>
+                        <div class="task-controls">
+                            <button class="btn run-btn" onclick="extractRequestId()" disabled>추출</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>

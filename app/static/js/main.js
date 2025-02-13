@@ -167,6 +167,142 @@ const phase2 = {
     }
 };
 
+// Phase 3: 정보 파싱 관련 코드
+const phase3 = {
+    // 파일 선택 이벤트 핸들러
+    handleFileSelect(fileType) {
+        const fileInput = document.getElementById(`${fileType}File`);
+        const fileName = fileInput.files[0]?.name || '선택된 파일 없음';
+        const fileNameSpan = fileInput.parentElement.querySelector('.file-name');
+        const parseBtn = fileInput.closest('.task-row').querySelector('.run-btn');
+        
+        fileNameSpan.textContent = fileName;
+        parseBtn.disabled = !fileInput.files[0];
+        
+        // 신청번호 추출 버튼 활성화 체크
+        this.checkExtractButton();
+    },
+
+    // Description 파싱 실행
+    async parseDescription(fileType) {
+        const taskRow = document.querySelector(`[data-task="${fileType}-parse"]`);
+        const fileInput = document.getElementById(`${fileType}File`);
+        const button = taskRow.querySelector('.run-btn');
+        
+        if (!fileInput.files[0]) return;
+
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        
+        this.setTaskStatus(fileType, '파싱 중...', '');
+        button.disabled = true;
+        
+        try {
+            const response = await fetch(`/policy/parse-description/${fileType}`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                const timeInfo = `(${result.elapsed_time}초)`;
+                this.setTaskStatus(fileType, `완료 ${timeInfo}`, 'success');
+                
+                // 다운로드 버튼 추가
+                this.addDownloadButton(taskRow, result.filename);
+                
+                // 신청번호 추출 버튼 활성화 체크
+                this.checkExtractButton();
+            } else {
+                this.setTaskStatus(fileType, '실패', 'error');
+                button.disabled = false;
+            }
+        } catch (error) {
+            console.error(error);
+            this.setTaskStatus(fileType, '오류', 'error');
+            button.disabled = false;
+        }
+    },
+
+    // 신청번호 추출
+    async extractRequestId() {
+        const taskRow = document.querySelector('[data-task="request-number"]');
+        const button = taskRow.querySelector('.run-btn');
+        
+        this.setTaskStatus('request-number', '추출 중...', '');
+        button.disabled = true;
+        
+        try {
+            const response = await fetch('/policy/extract-request-id', {
+                method: 'POST'
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                const timeInfo = `(${result.elapsed_time}초)`;
+                this.setTaskStatus('request-number', `완료 ${timeInfo}`, 'success');
+                this.addDownloadButton(taskRow, result.filename);
+                
+                if (this.checkAllCompleted()) {
+                    phaseManager.complete(3);
+                }
+            } else {
+                this.setTaskStatus('request-number', '실패', 'error');
+                button.disabled = false;
+            }
+        } catch (error) {
+            console.error(error);
+            this.setTaskStatus('request-number', '오류', 'error');
+            button.disabled = false;
+        }
+    },
+
+    // 상태 표시 업데이트
+    setTaskStatus(taskType, message, type = '') {
+        const status = document.querySelector(`[data-task="${taskType}-parse"] .task-status`) ||
+                      document.querySelector(`[data-task="${taskType}"] .task-status`);
+        status.textContent = message;
+        status.className = 'task-status';
+        if (type) status.classList.add(type);
+    },
+
+    // 다운로드 버튼 추가
+    addDownloadButton(taskRow, filename) {
+        const controls = taskRow.querySelector('.task-controls');
+        let downloadBtn = controls.querySelector('.download-btn');
+        
+        if (!downloadBtn) {
+            downloadBtn = document.createElement('button');
+            downloadBtn.className = 'btn download-btn';
+            downloadBtn.textContent = '다운로드';
+            controls.appendChild(downloadBtn);
+        }
+        
+        downloadBtn.onclick = () => {
+            window.location.href = `/policy/download/${filename}`;
+        };
+    },
+
+    // 신청번호 추출 버튼 활성화 체크
+    checkExtractButton() {
+        const requestFile = document.getElementById('requestFile');
+        const extractBtn = document.querySelector('[data-task="request-number"] .run-btn');
+        
+        extractBtn.disabled = !requestFile.files[0];
+    },
+
+    // 모든 작업 완료 체크
+    checkAllCompleted() {
+        const tasks = ['policy-parse', 'duplicate-parse', 'request-number'];
+        return tasks.every(task => {
+            const status = document.querySelector(`[data-task="${task}"] .task-status.success`);
+            return status !== null;
+        });
+    }
+};
+
 // Phase 관리
 const phaseManager = {
     complete(currentPhase) {
@@ -198,3 +334,6 @@ const phaseManager = {
 window.saveConnection = () => phase1.saveConnection();
 window.resetForm = () => phase1.reset();
 window.collectFirewallData = (dataType) => phase2.collectData(dataType);
+window.handleFileSelect = (fileType) => phase3.handleFileSelect(fileType);
+window.parseDescription = (fileType) => phase3.parseDescription(fileType);
+window.extractRequestId = () => phase3.extractRequestId();
