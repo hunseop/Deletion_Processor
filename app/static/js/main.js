@@ -1,42 +1,4 @@
-// 데이터 수집 함수
-async function collectData(dataType) {
-    try {
-        const response = await fetch(`/policy/collect/${dataType}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                // TODO: 실제 방화벽 정보 추가
-            })
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            // 다운로드 버튼 활성화
-            const downloadBtn = document.querySelector(`[data-task="${dataType}"] .download`);
-            downloadBtn.disabled = false;
-            downloadBtn.dataset.filename = result.filename;
-        }
-        
-        alert(result.message);
-    } catch (error) {
-        alert('데이터 수집 중 오류가 발생했습니다.');
-        console.error(error);
-    }
-}
-
-// 파일 다운로드 함수
-function downloadData(dataType) {
-    const downloadBtn = document.querySelector(`[data-task="${dataType}"] .download`);
-    const filename = downloadBtn.dataset.filename;
-    
-    if (filename) {
-        window.location.href = `/policy/download/${filename}`;
-    }
-}
-
+// Phase 1 부분 시작
 // IP 주소 검증 함수
 function isValidIP(ip) {
     if (!ip) return true; // secondary IP는 선택사항이므로 빈 값 허용
@@ -79,14 +41,14 @@ function resetStatus() {
     status.classList.remove('success', 'error');
 }
 
-// 리셋 함수 수정
+// 리셋 함수
 function resetForm() {
     const form = document.getElementById('firewallConnectionForm');
     form.reset();
     resetStatus();
 }
 
-// 저장 함수 수정
+// 저장 함수
 async function saveConnection() {
     if (!validateForm()) return;
     
@@ -129,3 +91,4 @@ async function saveConnection() {
         status.classList.add('error');
     }
 } 
+// Phase 1 부분 끝
