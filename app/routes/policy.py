@@ -16,4 +16,12 @@ def save_connection():
         result = policy_service.save_connection(firewall_info)
         return jsonify(result)
     except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+@bp.route('/collect-firewall-data/<data_type>', methods=['POST'])
+def collect_firewall_data(data_type):
+    try:
+        result = policy_service.collect_firewall_data(data_type)
+        return jsonify(result)
+    except Exception as e:
         return jsonify({'success': False, 'message': str(e)}) 

@@ -24,7 +24,7 @@ body {
     text-align: center;
 }
 
-/* 태스크 카드 */
+/* 공통 카드 스타일 */
 .task-card {
     background: white;
     border-radius: 8px;
@@ -33,35 +33,26 @@ body {
     margin-bottom: 20px;
 }
 
-/* 태스크 행 */
-.task-row {
+.task-card.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.task-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
+    padding-bottom: 12px;
     border-bottom: 1px solid #eee;
+    margin-bottom: 12px;
 }
 
-/* 컨트롤 버튼 */
-.control-button {
-    padding: 8px;
-    margin-left: 8px;
-    border: none;
-    border-radius: 4px;
-    background: #f0f0f0;
-    cursor: pointer;
+.task-header h2 {
+    font-size: 16px;
+    font-weight: 600;
 }
 
-.control-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.control-button:hover:not(:disabled) {
-    background: #e0e0e0;
-}
-
-/* Phase 1 스타일 수정 */
+/* Phase 1 스타일 */
 .connection-form {
     padding: 10px;
 }
@@ -99,70 +90,7 @@ body {
     margin-left: 8px;
 }
 
-.btn {
-    padding: 6px 10px;
-    font-size: 13px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-/* 태스크 카드 헤더 */
-.task-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 12px;
-}
-
-.task-header h2 {
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.task-status {
-    font-size: 13px;
-    color: #666;
-}
-
-.test-connection {
-    background-color: #4299e1;
-    color: white;
-}
-
-.test-connection:hover:not(:disabled) {
-    background-color: #3182ce;
-}
-
-.save-connection {
-    background-color: #48bb78;
-    color: white;
-}
-
-/* 버튼 스타일 */
-.save-btn {
-    background-color: #4299e1;
-    color: white;
-}
-
-.reset-btn {
-    background-color: #e2e8f0;
-    color: #4a5568;
-}
-
-/* 상태 스타일 */
-.task-status.success {
-    color: #48bb78;
-}
-
-.task-status.error {
-    color: #e53e3e;
-}
-
-/* Phase 2 스타일 추가 */
+/* Phase 2 스타일 */
 .task-list {
     display: flex;
     flex-direction: column;
@@ -181,6 +109,10 @@ body {
     border-bottom: none;
 }
 
+.task-info {
+    flex: 1;
+}
+
 .task-label {
     font-size: 13px;
     color: #333;
@@ -191,13 +123,48 @@ body {
     gap: 4px;
 }
 
+/* 버튼 스타일 */
+.btn {
+    padding: 6px 10px;
+    font-size: 13px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.save-btn {
+    background-color: #4299e1;
+    color: white;
+}
+
+.reset-btn {
+    background-color: #e2e8f0;
+    color: #4a5568;
+}
+
 .run-btn {
     background-color: #4299e1;
     color: white;
     min-width: 60px;
 }
 
-.run-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+/* 상태 표시 스타일 */
+.task-status {
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.task-status.success {
+    color: #48bb78;
+}
+
+.task-status.error {
+    color: #e53e3e;
 } 

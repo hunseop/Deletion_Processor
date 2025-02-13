@@ -23,4 +23,23 @@ class PolicyService:
                 }
             }
         except Exception as e:
-            return {'success': False, 'message': f'저장 실패: {str(e)}'} 
+            return {'success': False, 'message': f'저장 실패: {str(e)}'}
+
+    def collect_firewall_data(self, data_type):
+        """Phase 2: 방화벽 데이터 수집"""
+        try:
+            # TODO: 실제 데이터 수집 로직 구현
+            data_type_names = {
+                'policy': '방화벽 정책',
+                'usage': '사용이력',
+                'duplicate': '중복 정책'
+            }
+            return {
+                'success': True,
+                'message': f'{data_type_names.get(data_type, data_type)} 수집 완료'
+            }
+        except Exception as e:
+            return {
+                'success': False,
+                'message': f'데이터 수집 실패: {str(e)}'
+            } 
